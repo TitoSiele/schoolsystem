@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Fee Management System</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="login-screen" style="display:none; position:fixed; inset:0; z-index:2000; background:linear-gradient(135deg,#111827 0%,#1e3a8a 100%); align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#fff; border-radius:14px; width:420px; max-width:100%; padding:32px; box-shadow:0 25px 60px rgba(0,0,0,0.35);">
+        <div style="text-align:center; margin-bottom:26px;">
+            <div style="width:52px; height:52px; border-radius:12px; background:#2563eb; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; font-size:19px;">SF</div>
+            <h2 style="margin:14px 0 5px; font-size:21px;">SchoolPay</h2>
+            <p style="color:#64748b; font-size:13px; margin:0;">Sign in to your school's account</p>
+        </div>
+
+        <div id="login-error" class="modal-error" style="display:none;"></div>
+
+        <form id="login-form" onsubmit="submitLogin(event)">
+            <label for="login_email" style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">School email</label>
+            <input id="login_email" type="email" required placeholder="admin@yourschool.sc.ke" style="width:100%;padding:10px 12px;margin-bottom:16px;border:1px solid #dbe2ea;border-radius:7px;font-size:13px;box-sizing:border-box;">
+
+            <label for="login_password" style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Password</label>
+            <input id="login_password" type="password" required placeholder="••••••••" style="width:100%;padding:10px 12px;margin-bottom:20px;border:1px solid #dbe2ea;border-radius:7px;font-size:13px;box-sizing:border-box;">
+
+            <button type="submit" class="primary-btn" id="login-btn" style="width:100%;padding:11px;">Sign in</button>
+        </form>
+
+        <div style="border-top:1px solid #e5e7eb; margin:22px 0 16px;"></div>
+
+        <p style="text-align:center; color:#64748b; font-size:12px; margin-bottom:10px;">New school? Start your subscription</p>
+        <button type="button" onclick="openRegisterModal()" class="small-btn" style="display:block; width:100%; padding:10px;">Create a school account</button>
+
+        <p style="text-align:center; color:#94a3b8; font-size:11px; margin-top:18px;">Free 50-student trial. No card required.</p>
+    </div>
+</div>
+
+<!-- ===================== REGISTER ===================== -->
+<div id="register-modal" style="display:none; position:fixed; inset:0; z-index:2000; background:rgba(15,23,42,0.6); align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+    <div style="background:#fff; border-radius:12px; width:480px; max-width:100%; padding:28px; max-height:92vh; overflow-y:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;">
+            <h3 style="margin:0;">Create your school account</h3>
+            <button type="button" onclick="closeRegisterModal()" style="background:none;border:none;font-size:24px;color:#94a3b8;cursor:pointer;">&times;</button>
+        </div>
+
+        <div id="register-error" class="modal-error" style="display:none;"></div>
+
+        <form id="register-form" onsubmit="submitRegister(event)">
+            <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">School name</label>
+            <input id="reg_school_name" type="text" required placeholder="Green Valley School" style="width:100%;padding:10px 12px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+
+            <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">School code</label>
+            <input id="reg_school_code" type="text" required placeholder="GVHS" maxlength="12" style="width:100%;padding:10px 12px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+            <p style="font-size:11px;color:#94a3b8;margin:-8px 0 14px;">Short unique code for your school.</p>
+
+            <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">School email</label>
+            <input id="reg_school_email" type="email" placeholder="office@yourschool.sc.ke" style="width:100%;padding:10px 12px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+
+            <div style="border-top:1px solid #e5e7eb;margin:18px 0;"></div>
+            <p style="font-size:12px;font-weight:600;color:#334155;margin-bottom:12px;">Administrator login</p>
+
+            <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Your name</label>
+            <input id="reg_admin_name" type="text" required placeholder="Jane Doe" style="width:100%;padding:10px 12px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+
+            <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Login email</label>
+            <input id="reg_admin_email" type="email" required placeholder="admin@yourschool.sc.ke" style="width:100%;padding:10px 12px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+
+            <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Password</label>
+            <input id="reg_admin_password" type="password" required minlength="8" placeholder="At least 8 characters" style="width:100%;padding:10px 12px;margin-bottom:20px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+
+            <button type="submit" class="primary-btn" id="register-btn" style="width:100%;padding:11px;">Create account</button>
+        </form>
+    </div>
+</div>
+
+<div class="app" id="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">SF</div>
+            <div>
+                <h2>SchoolPay</h2>
+                <span>Fee Management</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <a href="#" class="nav-item active" onclick="showPage('dashboard', this)">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('students', this)">
+                <span>👨‍🎓</span>
+                Students
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('fees', this)">
+                <span>💰</span>
+                Fee Accounts
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('payments', this)">
+                <span>💳</span>
+                Payments
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('reconciliation', this)">
+                <span>🔄</span>
+                Reconciliation
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('mpesa', this)">
+                <span>📲</span>
+                M-Pesa
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('reports', this)">
+                <span>📊</span>
+                Reports
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('billing', this)">
+                <span>🧾</span>
+                Billing
+            </a>
+
+            <a href="#" class="nav-item" onclick="showPage('timetable', this)">
+                <span>🗓️</span>
+                Timetable
+            </a>
+
+            <a href="#" class="nav-item" id="nav-admin" style="display:none;" onclick="showPage('admin', this)">
+                <span>🛡️</span>
+                System Admin
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="nav-item">
+                <span>⚙</span>
+                Settings
+            </a>
+
+            <div class="user-card">
+                <div class="avatar">AD</div>
+                <div>
+                    <strong>Administrator</strong>
+                    <small>Finance Officer</small>
+                </div>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <h1 id="page-title">Dashboard</h1>
+                <p id="page-subtitle">Overview of school fee collection</p>
+            </div>
+
+            <div class="topbar-right">
+
+                <button class="notification">
+                    🔔
+                    <span></span>
+                </button>
+
+                <div class="school-info">
+                    <strong id="school-name">Green Valley School</strong>
+                    <small id="school-plan">-</small>
+                </div>
+
+                <button class="small-btn" onclick="logout()">Sign out</button>
+
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active-page">
+
+            <div class="welcome">
+                <div>
+                    <h2>Good morning, Administrator 👋</h2>
+                    <p>Here's what's happening with school finances today.</p>
+                </div>
+
+                <button class="primary-btn" onclick="showPage('payments')">
+                    + Record Payment
+                </button>
+            </div>
+
+
+            <!-- STAT CARDS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">👨‍🎓</div>
+                    <div>
+                        <span>Total Students</span>
+                        <h2>1,248</h2>
+                        <small class="positive">↑ 4.2% this term</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon green">💰</div>
+                    <div>
+                        <span>Fees Collected</span>
+                        <h2>KSh 14.7M</h2>
+                        <small class="positive">↑ 8.5% this month</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">⏳</div>
+                    <div>
+                        <span>Outstanding Fees</span>
+                        <h2>KSh 3.7M</h2>
+                        <small class="negative">187 students</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">🔄</div>
+                    <div>
+                        <span>Unmatched Payments</span>
+                        <h2>23</h2>
+                        <small class="warning">Requires attention</small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- CONTENT GRID -->
+
+            <div class="content-grid">
+
+                <!-- COLLECTION -->
+                <div class="panel large-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Fee Collection</h3>
+                            <p>Monthly collection performance</p>
+                        </div>
+
+                        <select>
+                            <option>2026</option>
+                            <option>2025</option>
+                        </select>
+                    </div>
+
+                    <div class="chart">
+
+                        <div class="chart-y">
+                            <span>5M</span>
+                            <span>4M</span>
+                            <span>3M</span>
+                            <span>2M</span>
+                            <span>1M</span>
+                            <span>0</span>
+                        </div>
+
+                        <div class="bars">
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 45%"></div>
+                                <span>Jan</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 60%"></div>
+                                <span>Feb</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 52%"></div>
+                                <span>Mar</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 72%"></div>
+                                <span>Apr</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 65%"></div>
+                                <span>May</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 88%"></div>
+                                <span>Jun</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 78%"></div>
+                                <span>Jul</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar current" style="height: 92%"></div>
+                                <span>Aug</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COLLECTION RATE -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Collection Rate</h3>
+                            <p>Current academic year</p>
+                        </div>
+                    </div>
+
+                    <div class="donut-container">
+
+                        <div class="donut">
+                            <div>
+                                <strong>79.9%</strong>
+                                <span>Collected</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="legend">
+                        <div>
+                            <span class="dot collected"></span>
+                            Collected
+                            <strong>KSh 14.7M</strong>
+                        </div>
+
+                        <div>
+                            <span class="dot outstanding"></span>
+                            Outstanding
+                            <strong>KSh 3.7M</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT PAYMENTS -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Recent Payments</h3>
+                        <p>Latest fee transactions</p>
+                    </div>
+
+                    <button class="text-btn" onclick="showPage('payments')">
+                        View all →
+                    </button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Admission No.</th>
+                                <th>Payment Method</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    <div class="student">
+                                        <div class="student-avatar">JK</div>
+                                        <strong>John Kiprotich</strong>
+                                    </div>
+                                </td>
+                                <td>2024/00125</td>
+                                <td>M-Pesa</td>
+                                <td>KSh 25,000</td>
+                                <td>20 Sep 2026</td>
+                                <td><span class="badge success">Matched</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="student">
+                                        <div class="student-avatar">AM</div>
+                                        <strong>Ann Mwangi</strong>
+                                    </div>
+                                </td>
+                                <td>2023/00418</td>
+                                <td>Bank</td>
+                                <td>KSh 40,000</td>
+                                <td>20 Sep 2026</td>
+                                <td><span class="badge success">Matched</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="student">
+                                        <div class="student-avatar">BK</div>
+                                        <strong>Brian Kiptoo</strong>
+                                    </div>
+                                </td>
+                                <td>2025/00731</td>
+                                <td>M-Pesa</td>
+                                <td>KSh 15,000</td>
+                                <td>19 Sep 2026</td>
+                                <td><span class="badge warning">Review</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="student">
+                                        <div class="student-avatar">SW</div>
+                                        <strong>Sarah Wanjiku</strong>
+                                    </div>
+                                </td>
+                                <td>2024/00298</td>
+                                <td>M-Pesa</td>
+                                <td>KSh 30,000</td>
+                                <td>19 Sep 2026</td>
+                                <td><span class="badge success">Matched</span></td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- STUDENTS PAGE -->
+
+        <section id="students" class="page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Students</h2>
+                    <p>Manage students and their information.</p>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                    <button class="small-btn" onclick="openImportModal()">📄 Import List</button>
+                    <button class="primary-btn" onclick="openAddStudentModal()">+ Add Student</button>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <input type="text" placeholder="Search student or admission number...">
+                <select>
+                    <option>All Classes</option>
+                    <option>Form 1</option>
+                    <option>Form 2</option>
+                    <option>Form 3</option>
+                    <option>Form 4</option>
+                </select>
+            </div>
+
+            <div class="panel">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Admission No.</th>
+                            <th>Class</th>
+                            <th>Parent</th>
+                            <th>Fee Balance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="students-tbody">
+                        <tr><td colspan="6">Loading...</td></tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- FEES PAGE -->
+
+        <section id="fees" class="page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Fee Accounts</h2>
+                    <p>Monitor student fee balances.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">📋</div>
+                    <div>
+                        <span>Expected Fees</span>
+                        <h2>KSh 18.4M</h2>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <div>
+                        <span>Collected</span>
+                        <h2>KSh 14.7M</h2>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">!</div>
+                    <div>
+                        <span>Outstanding</span>
+                        <h2>KSh 3.7M</h2>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel">
+                <h3>Student Fee Accounts</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Admission No.</th>
+                            <th>Student</th>
+                            <th>Expected</th>
+                            <th>Paid</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>2024/00125</td>
+                            <td>John Kiprotich</td>
+                            <td>KSh 60,000</td>
+                            <td>KSh 40,000</td>
+                            <td>KSh 20,000</td>
+                            <td><span class="badge warning">Balance</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>2023/00418</td>
+                            <td>Ann Mwangi</td>
+                            <td>KSh 60,000</td>
+                            <td>KSh 60,000</td>
+                            <td>KSh 0</td>
+                            <td><span class="badge success">Cleared</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+
+        <!-- PAYMENTS PAGE -->
+
+        <section id="payments" class="page">
+
+            <div class="page-heading">
+
+                <div>
+                    <h2>Payments</h2>
+                    <p>Record and manage school fee payments.</p>
+                </div>
+
+                <button class="primary-btn" onclick="openPaymentModal()">+ Record Payment</button>
+
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">💳</div>
+                    <div>
+                        <span>Total Collected</span>
+                        <h2 id="pay-stat-total">KSh 0</h2>
+                        <small id="pay-stat-count">0 payments</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">🎯</div>
+                    <div>
+                        <span>Matched</span>
+                        <h2 id="pay-stat-matched">KSh 0</h2>
+                        <small id="pay-stat-matched-count">0 payments</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">?</div>
+                    <div>
+                        <span>Unassigned</span>
+                        <h2 id="pay-stat-unassigned">0</h2>
+                        <small>No student linked</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">📅</div>
+                    <div>
+                        <span>Last Payment</span>
+                        <h2 id="pay-stat-last" style="font-size:16px;">-</h2>
+                        <small>Most recent date</small>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="toolbar">
+                <input type="text" id="pay-filter-search" placeholder="Search reference or payer name...">
+                <select id="pay-filter-student">
+                    <option value="">All Students</option>
+                </select>
+                <select id="pay-filter-method">
+                    <option value="">All Methods</option>
+                    <option value="M-Pesa">M-Pesa</option>
+                    <option value="Bank">Bank</option>
+                    <option value="Cash">Cash</option>
+                </select>
+                <input type="date" id="pay-filter-from" title="From date">
+                <input type="date" id="pay-filter-to" title="To date">
+                <button class="small-btn" onclick="applyPaymentFilters()">Filter</button>
+                <button class="small-btn" onclick="resetPaymentFilters()">Reset</button>
+            </div>
+
+            <div class="panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h3>All Payments</h3>
+                        <p id="pay-results-note">Newest first</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Student</th>
+                                <th>Method</th>
+                                <th>Payer</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="payments-tbody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RECONCILIATION -->
+
+        <section id="reconciliation" class="page">
+
+            <div class="page-heading">
+
+                <div>
+                    <h2>Payment Reconciliation</h2>
+                    <p>Match incoming payments with student accounts.</p>
+                </div>
+
+                <button class="primary-btn">
+                    Import Statement
+                </button>
+
+            </div>
+
+            <div class="reconciliation-info">
+
+                <div class="info-card matched-card">
+                    <span>✓</span>
+                    <div>
+                        <strong>1,842</strong>
+                        <small>Matched Payments</small>
+                    </div>
+                </div>
+
+                <div class="info-card review-card">
+                    <span>!</span>
+                    <div>
+                        <strong>23</strong>
+                        <small>Needs Review</small>
+                    </div>
+                </div>
+
+                <div class="info-card unmatched-card">
+                    <span>?</span>
+                    <div>
+                        <strong>8</strong>
+                        <small>Unmatched</small>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Payments Requiring Review</h3>
+                        <p>Review suggested student matches.</p>
+                    </div>
+
+                </div>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Transaction</th>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Suggested Student</th>
+                            <th>Confidence</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>MPX82391</td>
+                            <td>J KIPROTICH</td>
+                            <td>KSh 15,000</td>
+                            <td>John Kiprotich</td>
+                            <td><span class="confidence high">96%</span></td>
+                            <td>
+                                <button class="small-btn">Confirm</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>MPX92742</td>
+                            <td>A WANJIKU</td>
+                            <td>KSh 20,000</td>
+                            <td>Ann Wanjiku</td>
+                            <td><span class="confidence medium">82%</span></td>
+                            <td>
+                                <button class="small-btn">Review</button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- REPORTS -->
+
+        <section id="reports" class="page">
+
+            <div class="page-heading">
+
+                <div>
+                    <h2>Reports</h2>
+                    <p>School financial reports and analysis.</p>
+                </div>
+
+                <div class="toolbar" style="margin-bottom:0;">
+                    <label style="font-size:11px; color:#64748b; align-self:center;">Academic Year</label>
+                    <input type="text" id="report-year" value="2026" style="width:100px; flex:0 0 auto;">
+                    <label style="font-size:11px; color:#64748b; align-self:center;">Term</label>
+                    <select id="report-term" style="width:120px; flex:0 0 auto;">
+                        <option value="Term 1">Term 1</option>
+                        <option value="Term 2">Term 2</option>
+                        <option value="Term 3">Term 3</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div id="report-error" class="modal-error" style="display:none; margin-bottom:18px;"></div>
+
+            <div class="report-grid">
+
+                <div class="report-card">
+                    <span>📊</span>
+                    <h3>Fee Collection Report</h3>
+                    <p>View fees collected by class and term.</p>
+                    <button onclick="loadCollectionSummary()">Generate Report</button>
+                </div>
+
+                <div class="report-card">
+                    <span>👨‍🎓</span>
+                    <h3>Student Balance Report</h3>
+                    <p>Identify students with outstanding balances.</p>
+                    <button onclick="loadStudentBalances()">Generate Report</button>
+                </div>
+
+                <div class="report-card">
+                    <span>💳</span>
+                    <h3>Payment Report</h3>
+                    <p>View all payment transactions.</p>
+                    <button onclick="loadPaymentReport()">Generate Report</button>
+                </div>
+
+                <div class="report-card">
+                    <span>⚠️</span>
+                    <h3>Arrears / Overdue Report</h3>
+                    <p>Students with unpaid balances, ranked by urgency.</p>
+                    <button onclick="loadArrearsReport()">Generate Report</button>
+                </div>
+
+                <div class="report-card">
+                    <span>⚖️</span>
+                    <h3>Trial Balance</h3>
+                    <p>Institutional debits, credits and net surplus.</p>
+                    <button onclick="loadTrialBalance()">Generate Report</button>
+                </div>
+
+                <div class="report-card">
+                    <span>🔍</span>
+                    <h3>Audit Trail (CSV)</h3>
+                    <p>Download overrides, waivers and suspense clearings.</p>
+                    <button onclick="downloadAuditTrail()">Download CSV</button>
+                </div>
+
+            </div>
+
+            <div class="panel" id="report-output" style="display:none;">
+                <div class="panel-header">
+                    <div>
+                        <h3 id="report-output-title">Report</h3>
+                        <p id="report-output-subtitle"></p>
+                    </div>
+                    <button class="text-btn" onclick="closeReportOutput()">Close</button>
+                </div>
+                <div id="report-output-body"></div>
+            </div>
+
+        </section>
+
+    <!-- ===================== SYSTEM ADMIN ===================== -->
+
+        <section id="admin" class="page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>System Administration</h2>
+                    <p>Manage every school, user, student and payment in SchoolPay.</p>
+                </div>
+                <div>
+                    <button class="small-btn" onclick="loadAdminSection('schools')">↻ Refresh</button>
+                    <button class="primary-btn" onclick="openAdminSchoolModal()">+ New School</button>
+                </div>
+            </div>
+
+            <div id="admin-error" class="modal-error" style="display:none;"></div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-section="overview" onclick="loadAdminSection('overview')">Overview</button>
+                <button class="admin-tab" data-section="schools" onclick="loadAdminSection('schools')">Schools</button>
+                <button class="admin-tab" data-section="users" onclick="loadAdminSection('users')">Users</button>
+                <button class="admin-tab" data-section="students" onclick="loadAdminSection('students')">Students</button>
+                <button class="admin-tab" data-section="revenue" onclick="loadAdminSection('revenue')">Revenue</button>
+                <button class="admin-tab" data-section="payments" onclick="loadAdminSection('payments')">Payments</button>
+            </div>
+
+            <!-- OVERVIEW -->
+            <div id="admin-section-overview">
+                <div class="stats-grid" id="admin-stats"></div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><h3>Plan distribution</h3><p>How customers are subscribed</p></div>
+                    </div>
+                    <div id="admin-plans"></div>
+                </div>
+            </div>
+
+            <!-- SCHOOLS -->
+            <div id="admin-section-schools" style="display:none;">
+                <div class="toolbar">
+                    <input type="text" id="admin_school_search" placeholder="Search school, code or email...">
+                    <select id="admin_school_plan">
+                        <option value="">All plans</option>
+                        <option value="trial">Trial (50)</option>
+                        <option value="starter">Starter (250)</option>
+                        <option value="pro">Pro (1000)</option>
+                        <option value="enterprise">Enterprise (∞)</option>
+                    </select>
+                    <select id="admin_school_status">
+                        <option value="">All statuses</option>
+                        <option value="active">Active</option>
+                        <option value="past_due">Past due</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="expired">Expired</option>
+                    </select>
+                    <button class="small-btn" onclick="loadAdminSection('schools')">Filter</button>
+                </div>
+                <div class="panel"><div class="table-container"><table>
+                    <thead><tr><th>School</th><th>Code</th><th>Plan</th><th>Status</th><th>Students</th><th>Contact</th><th>Actions</th></tr></thead>
+                    <tbody id="admin-schools-tbody"></tbody>
+                </table></div></div>
+            </div>
+
+            <!-- USERS -->
+            <div id="admin-section-users" style="display:none;">
+                <div class="toolbar">
+                    <input type="text" id="admin_user_search" placeholder="Search email or name...">
+                    <select id="admin_user_school"><option value="">All schools</option></select>
+                    <button class="small-btn" onclick="loadAdminSection('users')">Filter</button>
+                    <button class="primary-btn" onclick="openAdminUserModal()">+ New User</button>
+                </div>
+                <div class="panel"><div class="table-container"><table>
+                    <thead><tr><th>Email</th><th>Name</th><th>School</th><th>Role</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="admin-users-tbody"></tbody>
+                </table></div></div>
+            </div>
+
+            <!-- STUDENTS -->
+            <div id="admin-section-students" style="display:none;">
+                <div class="toolbar">
+                    <input type="text" id="admin_student_search" placeholder="Search name or admission number...">
+                    <select id="admin_student_school"><option value="">All schools</option></select>
+                    <button class="small-btn" onclick="loadAdminSection('students')">Filter</button>
+                </div>
+                <div class="panel"><div class="table-container"><table>
+                    <thead><tr><th>Student</th><th>Admission No.</th><th>School</th><th>Class</th><th>Parent</th><th>Balance</th><th>Actions</th></tr></thead>
+                    <tbody id="admin-students-tbody"></tbody>
+                </table></div></div>
+            </div>
+
+            <!-- REVENUE -->
+            <div id="admin-section-revenue" style="display:none;">
+                <div class="toolbar">
+                    <button class="small-btn" onclick="generateSubscriptionInvoices()">Generate this month's invoices</button>
+                    <button class="small-btn" onclick="loadAdminSection('revenue')">↻ Refresh</button>
+                </div>
+                <div class="stats-grid" id="admin-revenue-stats"></div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <div><h3>Subscription invoices</h3><p>What schools owe you, and what has been collected.</p></div>
+                    </div>
+                    <div class="table-container"><table>
+                        <thead><tr><th>Invoice</th><th>School</th><th>Period</th><th>Due</th><th>Amount</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="admin-invoices-tbody"></tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <!-- PAYMENTS -->
+            <div id="admin-section-payments" style="display:none;">
+                <div class="toolbar">
+                    <input type="text" id="admin_payment_search" placeholder="Search reference or payer...">
+                    <select id="admin_payment_school"><option value="">All schools</option></select>
+                    <button class="small-btn" onclick="loadAdminSection('payments')">Filter</button>
+                </div>
+                <div class="panel"><div class="table-container"><table>
+                    <thead><tr><th>Reference</th><th>School</th><th>Payer</th><th>Method</th><th>Amount</th><th>Date</th><th>Actions</th></tr></thead>
+                    <tbody id="admin-payments-tbody"></tbody>
+                </table></div></div>
+            </div>
+
+        </section>
+
+    <!-- TIMETABLE -->
+        <section id="timetable" class="page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Timetable</h2>
+                    <p>Build and check the weekly teaching timetable.</p>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="small-btn" onclick="showPage('timetable-setup')">⚙ Subjects &amp; Classes</button>
+                    <button class="small-btn" onclick="checkTimetableConflicts()">🔍 Check Conflicts</button>
+                    <button class="primary-btn" onclick="autoGenerateTimetable()">⚡ Generate</button>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <select id="tt-class" onchange="loadTimetableGrid()"></select>
+                <button class="small-btn" onclick="clearTimetableForClass()">Clear this class</button>
+                <button class="small-btn" onclick="printTimetable()">🖨 Print</button>
+            </div>
+
+            <div id="tt-conflicts"></div>
+
+            <div class="panel">
+                <div class="table-container">
+                    <table id="tt-table" class="tt-table">
+                        <thead><tr id="tt-head"></tr></thead>
+                        <tbody id="tt-body"></tbody>
+                    </table>
+                </div>
+                <p style="font-size:11px;color:#94a3b8;margin-top:12px;">
+                    Click any empty cell to add a lesson. Click a filled cell to change or remove it.
+                    Break and lunch rows cannot be used for lessons.
+                </p>
+            </div>
+
+        </section>
+
+        <!-- SETUP DRAWER -->
+        <section id="timetable-setup" class="page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Timetable Setup</h2>
+                    <p>Subjects, classes and the school day.</p>
+                </div>
+                <button class="small-btn" onclick="showPage('timetable')">← Back to timetable</button>
+            </div>
+
+            <div class="content-grid">
+
+                <div class="panel">
+                    <h3>Subjects</h3>
+                    <div class="inline-form">
+                        <input type="text" id="tt-subject-name" placeholder="e.g. Mathematics">
+                        <input type="text" id="tt-subject-code" placeholder="MAT" style="max-width:90px;">
+                        <button class="primary-btn" onclick="addSubject()">Add</button>
+                    </div>
+                    <div id="tt-subjects-list" style="margin-top:14px;"></div>
+                </div>
+
+                <div class="panel">
+                    <h3>Classes</h3>
+                    <div class="inline-form">
+                        <input type="text" id="tt-class-name" placeholder="e.g. Form 3 Blue">
+                        <button class="primary-btn" onclick="addTimetableClass()">Add</button>
+                    </div>
+                    <button class="small-btn" style="margin-top:8px;" onclick="seedClassesFromStudents()">
+                        Import from my student list
+                    </button>
+                    <div id="tt-classes-list" style="margin-top:14px;"></div>
+                </div>
+
+            </div>
+
+            <div class="panel">
+                <h3>The school day</h3>
+                <p style="font-size:12px;color:#64748b;margin-bottom:12px;">
+                    These are the periods every class shares. Mark a period as a break or lunch and it cannot be used for a lesson.
+                </p>
+                <div id="tt-slots-list"></div>
+            </div>
+
+        </section>
+
+        <!-- LESSON MODAL -->
+        <div id="tt-cell-modal" class="modal-overlay">
+            <div class="modal" style="width:430px;">
+                <div class="modal-header">
+                    <div>
+                        <h3 id="tt-cell-title">Add Lesson</h3>
+                        <p style="font-size:12px;color:#64748b;margin-top:4px;" id="tt-cell-subtitle"></p>
+                    </div>
+                    <button type="button" class="modal-close" onclick="closeTimetableCell()">&times;</button>
+                </div>
+                <div id="tt-cell-error" class="modal-error" style="display:none;"></div>
+
+                <label for="tt-cell-subject">Subject</label>
+                <select id="tt-cell-subject"></select>
+
+                <label for="tt-cell-teacher">Teacher</label>
+                <select id="tt-cell-teacher"></select>
+
+                <label for="tt-cell-room">Room (optional)</label>
+                <input id="tt-cell-room" type="text" placeholder="e.g. Lab 2">
+
+                <label for="tt-cell-note">Note (optional)</label>
+                <input id="tt-cell-note" type="text" placeholder="e.g. bring practicals">
+
+                <div class="modal-actions">
+                    <button type="button" class="small-btn btn-danger" id="tt-cell-delete" onclick="deleteTimetableCell()">Remove</button>
+                    <button type="button" class="small-btn" onclick="closeTimetableCell()">Cancel</button>
+                    <button type="button" class="primary-btn" onclick="saveTimetableCell()">Save</button>
+                </div>
+            </div>
+        </div>
+
+    <!-- M-PESA -->
+        <section id="mpesa" class="page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>M-Pesa Payments</h2>
+                    <p>Request payments by phone and reconcile the daily till statement.</p>
+                </div>
+            </div>
+
+            <div id="mpesa-status-banner"></div>
+
+            <div class="stats-grid" id="mpesa-stats">
+                <div class="stat-card"><div class="stat-icon blue">📤</div><div><span>M-Pesa payments today</span><h2 id="mp-stat-sent">0</h2></div></div>
+                <div class="stat-card"><div class="stat-icon green">💰</div><div><span>M-Pesa collected (all time)</span><h2 id="mp-stat-received" style="font-size:17px;">KSh 0</h2></div></div>
+                <div class="stat-card"><div class="stat-icon orange">🔍</div><div><span>Unmatched statements</span><h2 id="mp-stat-unmatched">0</h2></div></div>
+            </div>
+
+            <div class="content-grid">
+
+                <!-- STK PUSH -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Request a payment</h3>
+                            <p>The parent confirms from their own phone using their M-Pesa menu.</p>
+                        </div>
+                    </div>
+
+                    <div id="mpesa-error" class="modal-error" style="display:none;"></div>
+                    <div id="mpesa-success" style="display:none;background:#dcfce7;border-left:3px solid #16a34a;padding:12px;border-radius:6px;font-size:13px;color:#15803d;margin-bottom:16px;"></div>
+
+                    <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Student</label>
+                    <select id="mp-student" onchange="onMpesaStudentChange()" style="width:100%;padding:9px 11px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+                        <option value="">-- Select a student --</option>
+                    </select>
+
+                    <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Parent phone</label>
+                    <input id="mp-phone" type="text" placeholder="07xxxxxxxx" style="width:100%;padding:9px 11px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+
+                    <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Amount (KSh)</label>
+                    <input id="mp-amount" type="number" min="1" step="1" placeholder="5000" style="width:100%;padding:9px 11px;margin-bottom:14px;border:1px solid #dbe2ea;border-radius:7px;box-sizing:border-box;">
+
+                    <button class="primary-btn" id="mp-send-btn" onclick="sendStkPush()">Send payment request</button>
+                    <p style="font-size:11px;color:#94a3b8;margin-top:10px;">
+                        M-Pesa takes whole shillings only. The admission number is sent as the account reference so the payment matches automatically.
+                    </p>
+                </div>
+
+                <!-- RECONCILE -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Reconcile the till statement</h3>
+                            <p>Upload the paybill CSV to find payments that are not yet recorded.</p>
+                        </div>
+                    </div>
+
+                    <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Statement file (CSV)</label>
+                    <input type="file" id="rec-file" accept=".csv" style="width:100%;padding:10px;border:2px dashed #dbe2ea;border-radius:8px;box-sizing:border-box;margin-bottom:12px;">
+
+                    <button class="small-btn" onclick="downloadStatementTemplate()">⬇ Expected columns</button>
+                    <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="primary-btn" style="flex:1; min-width:170px;" id="rec-run-btn" onclick="runReconciliation(false)">Match only (safe)</button>
+                        <button class="primary-btn" style="flex:1; min-width:170px; background:#b91c1c;" id="rec-post-btn" onclick="runReconciliation(true)">Post matched payments</button>
+                    </div>
+
+                    <div id="rec-result" style="margin-top:16px;"></div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- BILLING -->
+        <section id="billing" class="page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Billing</h2>
+                    <p id="billing-subtitle">Your SchoolPay subscription and invoices.</p>
+                </div>
+            </div>
+
+            <div id="billing-banner"></div>
+
+            <div class="stats-grid" id="billing-stats">
+                <div class="stat-card"><div class="stat-icon blue">📘</div><div><span>Current plan</span><h2 id="bill-plan" style="font-size:18px;">-</h2><small id="bill-price">-</small></div></div>
+                <div class="stat-card"><div class="stat-icon green">🎓</div><div><span>Students</span><h2 id="bill-students">0</h2><small id="bill-capacity">-</small></div></div>
+                <div class="stat-card"><div class="stat-icon orange">💳</div><div><span>Outstanding</span><h2 id="bill-outstanding" style="font-size:17px;">KSh 0</h2><small id="bill-due">-</small></div></div>
+                <div class="stat-card"><div class="stat-icon purple">✅</div><div><span>Status</span><h2 id="bill-status" style="font-size:17px;">-</h2><small id="bill-status-note">-</small></div></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div><h3>Plans</h3><p>Change plan any time - your student limit changes immediately.</p></div>
+                </div>
+                <div id="billing-plans" class="content-grid"></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div><h3>My invoices</h3><p>Monthly subscription charges for your school.</p></div>
+                </div>
+                <div class="table-container"><table>
+                    <thead><tr><th>Invoice</th><th>Period</th><th>Plan</th><th>Due</th><th>Amount</th><th>Balance</th><th>Status</th><th>Payments</th></tr></thead>
+                    <tbody id="billing-tbody"></tbody>
+                </table></div>
+            </div>
+
+            <div class="panel" id="platform-billing" style="display:none;">
+                <div class="panel-header">
+                    <div><h3>Collected by this school</h3><p id="platform-billing-note">Click a paid invoice to see its payments.</p></div>
+                </div>
+                <div id="platform-billing-detail"></div>
+            </div>
+
+        </section>
+
+        </main>
+
+</div>
+
+
+<div id="student-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+  <div style="background:white; border-radius:10px; padding:24px; width:90%; max-width:420px; max-height:85vh; overflow-y:auto;">
+    <h3 id="student-modal-title">Add Student</h3>
+    <form id="student-form" onsubmit="submitStudentForm(event)">
+      <label>Admission Number</label>
+      <input type="text" id="admission_number" required style="width:100%; padding:8px; margin:4px 0 12px; box-sizing:border-box;">
+      <label>First Name</label>
+      <input type="text" id="first_name" required style="width:100%; padding:8px; margin:4px 0 12px; box-sizing:border-box;">
+      <label>Last Name</label>
+      <input type="text" id="last_name" required style="width:100%; padding:8px; margin:4px 0 12px; box-sizing:border-box;">
+      <label>Gender</label>
+      <select id="gender" style="width:100%; padding:8px; margin:4px 0 12px; box-sizing:border-box;">
+        <option value="">-- Select --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <label>Class</label>
+      <input type="text" id="class_name" required placeholder="e.g. Form 2A" style="width:100%; padding:8px; margin:4px 0 12px; box-sizing:border-box;">
+      <label>Parent Name</label>
+      <input type="text" id="parent_name" style="width:100%; padding:8px; margin:4px 0 12px; box-sizing:border-box;">
+      <label>Parent Phone</label>
+      <input type="text" id="parent_phone" style="width:100%; padding:8px; margin:4px 0 12px; box-sizing:border-box;">
+      <label>Fee Balance (KSh)</label>
+      <input type="number" id="fee_balance" step="0.01" style="width:100%; padding:8px; margin:4px 0 16px; box-sizing:border-box;">
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" onclick="closeStudentModal()" style="padding:8px 16px;">Cancel</button>
+        <button type="submit" class="primary-btn" style="padding:8px 16px;">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- RECORD / EDIT PAYMENT MODAL -->
+<div id="payment-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="payment-modal-title">Record Payment</h3>
+            <button type="button" class="modal-close" onclick="closePaymentModal()" aria-label="Close">&times;</button>
+        </div>
+
+        <div id="payment-modal-error" class="modal-error" style="display:none;"></div>
+
+        <form id="payment-form" onsubmit="submitPaymentForm(event)">
+
+            <label for="pay_student">Student</label>
+            <select id="pay_student">
+                <option value="">-- Unassigned --</option>
+            </select>
+
+            <label for="pay_amount">Amount (KSh)</label>
+            <input id="pay_amount" type="number" min="0.01" step="0.01" required placeholder="0.00">
+
+            <label for="pay_method">Method</label>
+            <select id="pay_method">
+                <option value="M-Pesa">M-Pesa</option>
+                <option value="Bank">Bank</option>
+                <option value="Cash">Cash</option>
+            </select>
+
+            <label for="pay_reference">Transaction reference</label>
+            <input id="pay_reference" type="text" placeholder="e.g. MPX1234567">
+
+            <label for="pay_payer_name">Payer name</label>
+            <input id="pay_payer_name" type="text">
+
+            <label for="pay_payer_phone">Payer phone</label>
+            <input id="pay_payer_phone" type="text" placeholder="e.g. 0712345678">
+
+            <label for="pay_date">Payment date</label>
+            <input id="pay_date" type="date">
+
+            <label for="pay_notes">Notes</label>
+            <textarea id="pay_notes" rows="2" placeholder="Optional note"></textarea>
+
+            <div class="modal-actions">
+                <button type="button" class="small-btn" onclick="closePaymentModal()">Cancel</button>
+                <button type="submit" class="primary-btn" id="payment-submit-btn">Save Payment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===================== BULK IMPORT ===================== -->
+<div id="import-modal" class="modal-overlay">
+    <div class="modal" style="width:760px;">
+        <div class="modal-header">
+            <div>
+                <h3>Import Students From a File</h3>
+                <p style="color:#64748b; font-size:12px; margin-top:4px;">Upload a spreadsheet, Word file or PDF. No typing needed.</p>
+            </div>
+            <button type="button" class="modal-close" onclick="closeImportModal()">&times;</button>
+        </div>
+
+        <div id="import-error" class="modal-error" style="display:none;"></div>
+
+        <!-- STEP 1 -->
+        <div id="import-step-upload">
+            <label style="display:block;font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;margin-bottom:5px;">Choose your file</label>
+            <input type="file" id="import_file" accept=".csv,.xlsx,.xls,.docx,.pdf,.jpg,.jpeg,.png" style="width:100%;padding:10px;border:2px dashed #dbe2ea;border-radius:8px;box-sizing:border-box;margin-bottom:16px;">
+
+            <div style="background:#f8fafc; border:1px solid #e5e7eb; border-radius:8px; padding:14px; margin-bottom:18px;">
+                <p style="font-size:12px;font-weight:600;color:#334155;margin-bottom:8px;">Expected columns (order does not matter)</p>
+                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                    <span class="badge warning">Admission No</span>
+                    <span class="badge warning">First Name</span>
+                    <span class="badge warning">Last Name</span>
+                    <span class="badge warning">Class</span>
+                    <span class="badge success">Parent (optional)</span>
+                    <span class="badge success">Phone (optional)</span>
+                    <span class="badge success">Balance (optional)</span>
+                </div>
+                <p style="font-size:11px;color:#64748b;margin-top:10px;">
+                    Common header names are matched automatically - "Adm No", "Student Name", "Grade", "Fees Due" and so on all work.
+                </p>
+            </div>
+
+            <div style="display:flex; gap:8px; justify-content:space-between; align-items:center;">
+                <button type="button" class="small-btn" onclick="downloadImportTemplate()">⬇ Download CSV template</button>
+                <button type="button" class="primary-btn" id="import-upload-btn" onclick="uploadImportFile()">Upload and Preview</button>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="import-step-review" style="display:none;">
+            <p id="import-summary" style="font-size:13px; color:#334155; margin-bottom:12px;"></p>
+
+            <div id="import-preview" style="max-height:320px; overflow:auto; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:16px;"></div>
+
+            <div style="display:flex; gap:8px; justify-content:flex-end;">
+                <button type="button" class="small-btn" onclick="backToUploadStep()">← Choose a different file</button>
+                <button type="button" class="primary-btn" id="import-commit-btn" onclick="commitImport()">Import into Students</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== STUDENT PHOTO ===================== -->
+<div id="photo-modal" class="modal-overlay">
+    <div class="modal" style="width:400px; text-align:center;">
+        <div class="modal-header">
+            <h3>Student Photo</h3>
+            <button type="button" class="modal-close" onclick="closePhotoModal()">&times;</button>
+        </div>
+
+        <div id="photo-error" class="modal-error" style="display:none;text-align:left;"></div>
+
+        <img id="photo-preview" alt="" style="width:170px;height:170px;object-fit:cover;border-radius:50%;border:3px solid #e5e7eb;margin-bottom:16px;display:none;">
+
+        <input type="file" id="photo_file" accept=".jpg,.jpeg,.png,.webp,.gif" style="width:100%;padding:10px;border:2px dashed #dbe2ea;border-radius:8px;box-sizing:border-box;margin-bottom:16px;">
+
+        <div style="display:flex; gap:8px; justify-content:center;">
+            <button type="button" class="small-btn" onclick="closePhotoModal()">Cancel</button>
+            <button type="button" class="primary-btn" id="photo-upload-btn" onclick="uploadPhoto()">Upload Photo</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== ADMIN: SCHOOL MODAL ===================== -->
+<div id="admin-school-modal" class="modal-overlay">
+    <div class="modal" style="width:480px;">
+        <div class="modal-header">
+            <h3 id="admin-school-modal-title">New School</h3>
+            <button type="button" class="modal-close" onclick="closeAdminModal('admin-school-modal')">&times;</button>
+        </div>
+        <div id="admin-school-error" class="modal-error" style="display:none;"></div>
+
+        <form id="admin-school-form" onsubmit="submitAdminSchool(event)">
+            <label for="as_name">School name</label>
+            <input id="as_name" type="text" required placeholder="Riverside Academy">
+
+            <label for="as_code">School code</label>
+            <input id="as_code" type="text" required placeholder="RIV" maxlength="12">
+
+            <label for="as_email">Contact email</label>
+            <input id="as_email" type="email" placeholder="office@school.sc.ke">
+
+            <label for="as_phone">Phone</label>
+            <input id="as_phone" type="text" placeholder="0722000000">
+
+            <label for="as_plan">Subscription plan</label>
+            <select id="as_plan">
+                <option value="trial">Trial - 50 students</option>
+                <option value="starter">Starter - 250 students</option>
+                <option value="pro">Pro - 1000 students</option>
+                <option value="enterprise">Enterprise - unlimited</option>
+            </select>
+
+            <div id="as_status_wrap" style="display:none;">
+                <label for="as_status">Subscription status</label>
+                <select id="as_status">
+                    <option value="active">Active</option>
+                    <option value="past_due">Past due</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="expired">Expired</option>
+                </select>
+            </div>
+
+            <div id="as_admin_fields">
+                <label for="as_admin_name">Administrator name</label>
+                <input id="as_admin_name" type="text" placeholder="Jane Doe">
+
+                <label for="as_admin_email">Administrator email</label>
+                <input id="as_admin_email" type="email" placeholder="admin@school.sc.ke">
+
+                <label for="as_admin_password">Administrator password</label>
+                <input id="as_admin_password" type="password" placeholder="At least 8 characters">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="small-btn" onclick="closeAdminModal('admin-school-modal')">Cancel</button>
+                <button type="submit" class="primary-btn">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===================== ADMIN: USER MODAL ===================== -->
+<div id="admin-user-modal" class="modal-overlay">
+    <div class="modal" style="width:460px;">
+        <div class="modal-header">
+            <h3 id="admin-user-modal-title">New User</h3>
+            <button type="button" class="modal-close" onclick="closeAdminModal('admin-user-modal')">&times;</button>
+        </div>
+        <div id="admin-user-error" class="modal-error" style="display:none;"></div>
+
+        <form id="admin-user-form" onsubmit="submitAdminUser(event)">
+            <label for="au_email">Email</label>
+            <input id="au_email" type="email" required placeholder="staff@school.sc.ke">
+
+            <label for="au_name">Full name</label>
+            <input id="au_name" type="text">
+
+            <label for="au_school">School</label>
+            <select id="au_school"></select>
+
+            <label for="au_role">Role</label>
+            <select id="au_role">
+                <option value="staff">Staff</option>
+                <option value="bursar">Bursar</option>
+                <option value="admin">School admin</option>
+            </select>
+
+            <label for="au_password">Password</label>
+            <input id="au_password" type="password" placeholder="Leave blank to keep current">
+
+            <label for="au_platform" style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:13px;">
+                <input id="au_platform" type="checkbox" style="width:auto; margin:0;"> System administrator (full access to all schools)
+            </label>
+
+            <div class="modal-actions">
+                <button type="button" class="small-btn" onclick="closeAdminModal('admin-user-modal')">Cancel</button>
+                <button type="submit" class="primary-btn">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

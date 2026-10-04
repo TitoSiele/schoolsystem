@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+python-multipart
+
+# --- Document import (bulk student upload) ---
+pandas
+openpyxl
+pdfplumber
+python-docx
+pytesseract
+pillow
+
+# NOTE: pytesseract is only a wrapper. OCR on scanned/image documents ALSO needs
+# the Tesseract engine installed on the host machine and on PATH.
+# CSV, XLSX, DOCX and text-based PDF import work without it.
