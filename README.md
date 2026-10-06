@@ -113,3 +113,4 @@ frontend/
 - [ ] Add pagination - fine at 500 students, slow at 50,000
 - [ ] Install the Tesseract engine if you need OCR on scanned documents
 - [ ] Serve over HTTPS so the session cookie is marked `Secure`
+# schoolsystem
