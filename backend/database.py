@@ -3,16 +3,21 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-# Anchored to this file's folder so the app works no matter which directory the
-# server was launched from.
+# Production: set the DATABASE_URL env var (e.g. Render Postgres internal URL).
+# Local dev: falls back to the SQLite file so the app works out of the box.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_PATH = os.path.join(BASE_DIR, "school.db")
+DATABASE_URL = os.getenv("DATABASE_URL") or f"sqlite:///{os.path.join(BASE_DIR, 'school.db')}"
 
-DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
+# Render's Postgres URLs use the legacy "postgres://" scheme, which modern
+# SQLAlchemy rejects. Normalize it.
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+_connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False}
+    connect_args=_connect_args
 )
 
 SessionLocal = sessionmaker(

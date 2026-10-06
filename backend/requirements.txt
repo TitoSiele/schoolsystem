@@ -4,6 +4,9 @@ sqlalchemy
 pydantic
 python-multipart
 
+# --- Postgres (production on Render) ---
+psycopg2-binary
+
 # --- Document import (bulk student upload) ---
 pandas
 openpyxl
